@@ -8,19 +8,52 @@ Window {
     title: qsTr("MQTT")
     Row{
         Column {
-            Text {
-                text: "Oi"
+            Rectangle {
+                width: 100
+                height: 100
+                color: "red"
+                Text {
+                    anchors.fill: parent
+                    text: "Oi"
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                }
             }
-            Text {
-                text: "Bom dia"
+            Rectangle {
+                width: 100
+                height: 100
+                color: "blue"
+                Text {
+                    anchors.fill: parent
+                    text: "Bom dia"
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                }
             }
         }
         Column {
-            Text {
-                text: "Olá"
+            Rectangle {
+                width: 100
+                height: 100
+                color: "white"
+                Text {
+                    anchors.fill: parent
+                    text: "Olá"
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                }
             }
-            Text {
-                text: "Boa"
+            Rectangle {
+                width: 100
+                height: 100
+                color: "black"
+                Text {
+                    anchors.fill: parent
+                    text: "Boa"
+                    color: "white"
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                }
             }
         }
     }
