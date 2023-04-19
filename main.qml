@@ -7,7 +7,7 @@ Window {
     width: 1280
     height: 720
     visible: true
-    title: qsTr("MQTT")
+    title: qsTr("MoM")
     CustomBtn{
         id: filaBtn
         textContent: "Criar fila"
