@@ -8,20 +8,29 @@ Window {
     height: 720
     visible: true
     title: qsTr("MoM")
-    CustomBtn{
-        id: filaBtn
-        textContent: "Criar fila"
-        anchors.right: parent.right
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.rightMargin: 10
-    }
 
-    CustomBtn{
-        id: topicoBtn
-        textContent: "Criar tópico"
+    Rectangle {
+        id: rigthMenu
+        width: 256
+        height: parent.height
         anchors.right: parent.right
-        anchors.top: filaBtn.bottom
-        anchors.rightMargin: 10
-        anchors.topMargin: 20
+        color: "#2e2627"
+
+        CustomBtn{
+            id: filaBtn
+            textContent: "Criar fila"
+            anchors.right: parent.right
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.rightMargin: 10
+        }
+
+        CustomBtn{
+            id: topicoBtn
+            textContent: "Criar tópico"
+            anchors.right: parent.right
+            anchors.top: filaBtn.bottom
+            anchors.rightMargin: 10
+            anchors.topMargin: 20
+        }
     }
 }
