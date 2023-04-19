@@ -9,7 +9,25 @@ Window {
     visible: true
     title: qsTr("MoM")
     flags: Qt.Window | Qt.FramelessWindowHint
-    color: "#7289da"
+
+    Rectangle{
+        width: 1024
+        height: parent.height
+
+        TextField {
+            id: input
+            anchors.centerIn: parent
+            placeholderText: qsTr("Digite a mensagem")
+        }
+
+        Button {
+            anchors.left: input.right
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.leftMargin: 10
+            text: "Enviar mensagem"
+            onClicked: console.log(input.text)
+        }
+    }
 
     Rectangle {
         id: rigthMenu
