@@ -8,6 +8,7 @@ Window {
     height: 720
     visible: true
     title: qsTr("MoM")
+    flags: Qt.Window | Qt.FramelessWindowHint
 
     Rectangle {
         id: rigthMenu
