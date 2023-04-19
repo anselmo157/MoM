@@ -9,6 +9,7 @@ Window {
     visible: true
     title: qsTr("MoM")
     flags: Qt.Window | Qt.FramelessWindowHint
+    color: "#7289da"
 
     Rectangle {
         id: rigthMenu
