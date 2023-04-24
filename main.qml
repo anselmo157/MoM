@@ -36,21 +36,33 @@ Window {
         anchors.right: parent.right
         color: "#2e2627"
 
-        CustomBtn{
-            id: filaBtn
-            textContent: "Criar fila"
-            anchors.right: parent.right
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.rightMargin: 10
+        Rectangle {
+            id:isConnect
+            anchors.top: parent.top
+            anchors.horizontalCenter: rigthMenu.horizontalCenter
+            anchors.topMargin: 10
+
+            Text{
+                text: qsTr("Desconectado")
+                anchors.horizontalCenter: parent.horizontalCenter
+                color: "red"
+            }
+        }
+
+        TextField {
+            id: inpuUsername
+            anchors.top: isConnect.top
+            anchors.topMargin: 20
+            anchors.horizontalCenter: parent.horizontalCenter
+            placeholderText: qsTr("Digite o seu nome")
         }
 
         CustomBtn{
-            id: topicoBtn
-            textContent: "Criar tópico"
-            anchors.right: parent.right
-            anchors.top: filaBtn.bottom
-            anchors.rightMargin: 10
-            anchors.topMargin: 20
+            id: connectBtn
+            anchors.top: inpuUsername.bottom
+            anchors.topMargin: 10
+            anchors.horizontalCenter: parent.horizontalCenter
+            textContent: "Conectar"
         }
     }
 }
