@@ -56,6 +56,9 @@ Window {
                 anchors.left: inputMessage.right
                 anchors.leftMargin: 20
                 textContent: "Enviar mensagem"
+                onClicked: {
+                    backend.welcomeText(inputMessage.text)
+                }
             }
         }
 
@@ -145,6 +148,14 @@ Window {
                 anchors.horizontalCenter: parent.horizontalCenter
                 color: "black"
             }
+        }
+    }
+
+    Connections{
+        target: backend
+        
+        function onSetName(name){
+            
         }
     }
 }

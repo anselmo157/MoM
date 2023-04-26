@@ -6,26 +6,38 @@ from PySide2.QtGui import QGuiApplication
 
 from PySide2.QtQml import QQmlApplicationEngine
 
+from PySide2.QtCore import QObject, Slot, Signal
+
 import random
 
 import paho.mqtt.client as paho
 
-topics  = []
-queueMessages = []
+from queue import Queue
 
-class Client():
-    def __init__(self, main):
-        super().__init__()
+topics  = []
+queueMessagesList = []
+
+queueMessages = Queue()
+
+class Client(QObject):
+    def __init__(self):
+        QObject.__init__(self)
 
         self.broker = 'broker.emqx.io'
         self.port = 1883
         self.client_id = f'python-mqtt-{random.randint(0, 1000)}'
-        self.mainWindow = main
-
         self.client = self.connectMqtt()
         self.checkUnsend()
         self.client.loop_start()
-    
+
+    #Signal set name
+    setName = Signal(str)
+
+    #Function set name to label
+    @Slot(str)
+    def welcomeText(self, name):
+        self.setName.emit("Welcome, " + name)
+
     def connectMqtt(self):
         def on_connect(client, userdata, flags, rc):
             client.subscribe('Geral')
@@ -35,9 +47,10 @@ class Client():
                 print("Failed to connect, return code %d\n", rc)
 
         def on_message(client, userdata, msg):  # The callback for when a PUBLISH =
-            payloadMessage = "[{}] {}".format(msg.topic, str(msg.payload))
-            self.mainWindow.adicionaMensagens(payloadMessage)
-            print("Message received-> " + msg.topic + " " + str(msg.payload))  # Print a received msg
+            payloadMsg = msg.payload.decode()
+            payloadMessage = "[{}] {}".format(msg.topic, str(payloadMsg))
+            queueMessages.put(payloadMessage)
+            self.mainWindow.adicionaMensagens()
 
         client = paho.Client(self.client_id)
         client.on_connect = on_connect
@@ -50,8 +63,8 @@ class Client():
         self.client.loop_stop()
 
     def checkUnsend(self):
-        if queueMessages != []:
-            for message in queueMessages:
+        if queueMessagesList != []:
+            for message in queueMessagesList:
                 self.publish(message[0], message[1])
 
     def subscribeTopic(self, topic):
@@ -65,12 +78,14 @@ class Client():
         else:
             print(f"Failed to send message to topic {topic}")
 
-
 if __name__ == "__main__":
  
     app = QGuiApplication(sys.argv)
 
     engine = QQmlApplicationEngine()
+
+    client = Client()
+    engine.rootContext().setContextProperty("backend", client)
 
     qml_file = Path(__file__).resolve().parent / "main.qml"
 
