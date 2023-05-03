@@ -57,7 +57,7 @@ Window {
                 anchors.leftMargin: 20
                 textContent: "Enviar mensagem"
                 onClicked: {
-                    backend.printText(inputMessage.text)
+                    backend.publish(inputMessage.text, inputTopicMessage.text)
                 }
             }
         }
