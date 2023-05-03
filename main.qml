@@ -132,6 +132,13 @@ Window {
             anchors.topMargin: 10
             anchors.horizontalCenter: parent.horizontalCenter
             textContent: "Entrar no tópico"
+            onClicked: {
+                if(inputTopic.text != "" && listTopics.topics.indexOf(inputTopic.text) == -1){
+                    listTopics.topics.push(inputTopic.text)
+                    backend.printText(inputTopic.text)
+                    listTopics.model = listTopics.topics
+                }
+            }
         }
 
         Rectangle{
@@ -142,11 +149,64 @@ Window {
             anchors.horizontalCenter: parent.horizontalCenter
 
             Text{
+                height: 20
                 text: qsTr("Tópicos")
                 anchors.top: parent.top
                 anchors.topMargin: 10
                 anchors.horizontalCenter: parent.horizontalCenter
                 color: "black"
+            }
+
+            ScrollView{
+                anchors.fill: parent
+                anchors.topMargin: 20
+                ScrollBar.horizontal.interactive: false
+                ScrollBar.vertical.interactive: true
+
+                ListView {
+                    id: listTopics
+                    height: 180
+                    anchors.fill: parent
+                    anchors.topMargin: 20
+                    property var topics: []
+                    model: topics
+                    delegate:
+                        Rectangle{
+                            width: 200
+                            height: 30
+                            Text{
+                                anchors.verticalCenter: parent.verticalCenter
+                                anchors.left: parent.left
+                                anchors.leftMargin: 10
+                                text: qsTr(modelData)
+                            }
+                            Button{
+                                anchors.right: parent.right
+                                anchors.rightMargin: 10
+                                implicitWidth: 50
+                                implicitHeight: 25
+                                background: Rectangle{
+                                    radius: 10
+                                    color: "red"
+                                }
+                                contentItem: Item {
+                                    Text{
+                                        text: qsTr("Sair")
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                        color: "white"
+                                    }
+                                }
+                                onClicked: {
+                                   listTopics.topics = Array.from(listTopics.topics).filter(r => r !== listTopics.topics[index])
+                                   backend.printText(listTopics.topics)
+                                   listTopics.model = listTopics.topics
+
+                                }
+                            }
+                            property int index
+                        }
+                }
             }
         }
     }

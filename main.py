@@ -38,6 +38,10 @@ class Client(QObject):
     def welcomeText(self, name):
         self.setName.emit("Welcome, " + name)
 
+    @Slot(str)
+    def printText(self, text):
+        print(text)
+
     def connectMqtt(self):
         def on_connect(client, userdata, flags, rc):
             client.subscribe('Geral')
