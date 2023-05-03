@@ -57,7 +57,7 @@ Window {
                 anchors.leftMargin: 20
                 textContent: "Enviar mensagem"
                 onClicked: {
-                    backend.welcomeText(inputMessage.text)
+                    backend.printText(inputMessage.text)
                 }
             }
         }
@@ -78,6 +78,35 @@ Window {
                 anchors.topMargin: 10
                 anchors.horizontalCenter: parent.horizontalCenter
                 color: "black"
+            }
+
+            ScrollView{
+                anchors.fill: parent
+                anchors.topMargin: 20
+                ScrollBar.horizontal.interactive: false
+                ScrollBar.vertical.interactive: true
+
+                ListView {
+                    id: listMessages
+                    height: 520
+                    anchors.fill: parent
+                    anchors.topMargin: 20
+                    property var messages: []
+                    model: messages
+                    delegate:
+                        Rectangle{
+                            width: 920
+                            height: 30
+                            radius: 10
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            Text{
+                                anchors.verticalCenter: parent.verticalCenter
+                                anchors.left: parent.left
+                                anchors.leftMargin: 10
+                                text: qsTr("Tópico: " + modelData)
+                            }
+                        }
+                }
             }
         }
     }
@@ -135,8 +164,11 @@ Window {
             onClicked: {
                 if(inputTopic.text != "" && listTopics.topics.indexOf(inputTopic.text) == -1){
                     listTopics.topics.push(inputTopic.text)
-                    backend.printText(inputTopic.text)
+                    listMessages.messages.push(inputTopic.text)
+                    inputTopic.text = ""
                     listTopics.model = listTopics.topics
+                    listMessages.model = listMessages.messages
+                    backend.subscribeTopic(inputTop.text)
                 }
             }
         }
@@ -199,9 +231,7 @@ Window {
                                 }
                                 onClicked: {
                                    listTopics.topics = Array.from(listTopics.topics).filter(r => r !== listTopics.topics[index])
-                                   backend.printText(listTopics.topics)
                                    listTopics.model = listTopics.topics
-
                                 }
                             }
                             property int index

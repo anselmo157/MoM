@@ -30,14 +30,6 @@ class Client(QObject):
         self.checkUnsend()
         self.client.loop_start()
 
-    #Signal set name
-    setName = Signal(str)
-
-    #Function set name to label
-    @Slot(str)
-    def welcomeText(self, name):
-        self.setName.emit("Welcome, " + name)
-
     @Slot(str)
     def printText(self, text):
         print(text)
@@ -71,9 +63,11 @@ class Client(QObject):
             for message in queueMessagesList:
                 self.publish(message[0], message[1])
 
+    @Slot(str)
     def subscribeTopic(self, topic):
         self.client.subscribe(topic)
 
+    @Slot(str,str)
     def publish(self, msg, topic):
         result = self.client.publish(topic, msg)
         status = result[0]
