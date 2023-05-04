@@ -40,6 +40,7 @@ Window {
                 anchors.left: parent.left
                 anchors.leftMargin: 20
                 placeholderText: qsTr("Digite o tópico")
+                readOnly: true
             }
 
             TextField {
@@ -48,6 +49,7 @@ Window {
                 anchors.left: inputTopicMessage.right
                 anchors.leftMargin: 20
                 placeholderText: qsTr("Digite a mensagem")
+                readOnly: true
             }
 
             CustomBtn{
@@ -57,7 +59,19 @@ Window {
                 anchors.leftMargin: 20
                 textContent: "Enviar mensagem"
                 onClicked: {
-                    backend.publish(inputMessage.text, inputTopicMessage.text)
+                    if(inputTopicMessage.text != "" && inputMessage.text != ""){
+                        backend.publish(inputMessage.text, inputTopicMessage.text)
+                        if(listTopics.topics.indexOf(inputTopicMessage.text) != -1){
+                            listMessages.messages.push(inputMessage.text)
+                            inputTopicMessage.text = ""
+                            inputMessage.text = ""
+                            listMessages.model = listMessages.messages
+                        } else {
+                            inputTopicMessage.text = ""
+                            inputMessage.text = ""
+                            listMessages.model = listMessages.messages
+                        }
+                    }
                 }
             }
         }
@@ -100,10 +114,11 @@ Window {
                             radius: 10
                             anchors.horizontalCenter: parent.horizontalCenter
                             Text{
+                                id: topicMessage
                                 anchors.verticalCenter: parent.verticalCenter
                                 anchors.left: parent.left
                                 anchors.leftMargin: 10
-                                text: qsTr("Tópico: " + modelData)
+                                text: qsTr(modelData)
                             }
                         }
                 }
@@ -125,6 +140,7 @@ Window {
             anchors.topMargin: 10
 
             Text{
+                id:connection
                 text: qsTr("Desconectado")
                 anchors.horizontalCenter: parent.horizontalCenter
                 color: "red"
@@ -137,6 +153,7 @@ Window {
             anchors.topMargin: 20
             anchors.horizontalCenter: parent.horizontalCenter
             placeholderText: qsTr("Digite o seu nome")
+            readOnly: false
         }
 
         CustomBtn{
@@ -145,6 +162,15 @@ Window {
             anchors.topMargin: 10
             anchors.horizontalCenter: parent.horizontalCenter
             textContent: "Conectar"
+            onClicked: {
+                backend.connect()
+                connection.text = "Conectado"
+                connection.color = "green"
+                inpuUsername.readOnly = true
+                inputTopic.readOnly = false
+                inputTopicMessage.readOnly = false
+                inputMessage.readOnly = false
+            }
         }
 
         TextField {
@@ -153,6 +179,7 @@ Window {
             anchors.topMargin: 20
             anchors.horizontalCenter: parent.horizontalCenter
             placeholderText: qsTr("Digite o nome do tópico")
+            readOnly: true
         }
 
         CustomBtn{
@@ -164,10 +191,8 @@ Window {
             onClicked: {
                 if(inputTopic.text != "" && listTopics.topics.indexOf(inputTopic.text) == -1){
                     listTopics.topics.push(inputTopic.text)
-                    listMessages.messages.push(inputTopic.text)
                     inputTopic.text = ""
                     listTopics.model = listTopics.topics
-                    listMessages.model = listMessages.messages
                     backend.subscribeTopic(inputTop.text)
                 }
             }

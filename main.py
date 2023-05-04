@@ -20,6 +20,9 @@ queueMessagesList = []
 queueMessages = Queue()
 
 class Client(QObject):
+    isConnect = "Desconectado"
+    clientConnect = False
+
     def __init__(self):
         QObject.__init__(self)
 
@@ -34,19 +37,19 @@ class Client(QObject):
     def printText(self, text):
         print(text)
 
+    @Slot()
     def connectMqtt(self):
         def on_connect(client, userdata, flags, rc):
             client.subscribe('Geral')
             if rc == 0:
-                print("Conectado ao MQTT Broker!")
+                self.isConnect = "Conectado"
             else:
-                print("Failed to connect, return code %d\n", rc)
+                self.isConnect = "Desconectado"
 
         def on_message(client, userdata, msg):  # The callback for when a PUBLISH =
             payloadMsg = msg.payload.decode()
             payloadMessage = "[{}] {}".format(msg.topic, str(payloadMsg))
             queueMessages.put(payloadMessage)
-            self.mainWindow.adicionaMensagens()
 
         client = paho.Client(self.client_id)
         client.on_connect = on_connect
@@ -54,10 +57,12 @@ class Client(QObject):
         client.connect(self.broker, self.port)
         return client
 
+    @Slot()
     def disconnectMqtt(self):
         self.client.disconnect()
         self.client.loop_stop()
 
+    @Slot()
     def checkUnsend(self):
         if queueMessagesList != []:
             for message in queueMessagesList:
@@ -75,6 +80,15 @@ class Client(QObject):
             print(f"Send `{msg}` to topic `{topic}`")
         else:
             print(f"Failed to send message to topic {topic}")
+
+    @Slot()
+    def connect(self):
+        if(self.clientConnect == False):
+            if(self.isConnect == "Conectado"):
+                print("Conectado ao MQTT Broker!")
+                self.clientConnect = True
+            else :
+                print("Failed to connect, return code %d\n", rc)
 
 if __name__ == "__main__":
  
